@@ -229,8 +229,8 @@ def create_chord_diagram(data, labels):
     mapped_data = map_data(data, row_sum, ideogram_length)
     idx_sort = np.argsort(mapped_data, axis=1)
     ribbon_ends = make_ribbon_ends(mapped_data, ideo_ends, idx_sort)
-    ideo_colors = get_colors(L)
-    ribbon_color = [L*[color] for color in ideo_colors]
+    colors = get_colors(L)
+    ribbon_color = [L*[color] for color in colors]
 
     layout = make_layout('Successful passes between Players', 800)
 
@@ -239,7 +239,7 @@ def create_chord_diagram(data, labels):
     for k in range(L):
         z = make_ideogram_arc(1.1, ideo_ends[k])
         zi = make_ideogram_arc(1.0, ideo_ends[k])
-        line = Line(color=ideo_colors[k], shape='spline', width=0.25)
+        line = Line(color=colors[k], shape='spline', width=0.25)
         trace = Scatter(x=z.real,
                         y=z.imag,
                         mode='lines',
@@ -251,7 +251,7 @@ def create_chord_diagram(data, labels):
         path = ' '.join('L{},{}'.format(x.real, x.imag) for x in z).replace('L', 'M', 1)
         path += ' '.join('L{},{}'.format(x.real, x.imag) for x in zi[::-1])
         layout['shapes'].append(
-            make_ideo_shape(path, 'rgb(150,150,150)', ideo_colors[k])
+            make_ideo_shape(path, 'rgb(150,150,150)', colors[k])
         )
         n = int(len(z)/2)
         for i, text in enumerate([labels[k], int(row_sum[k])]):
@@ -289,12 +289,12 @@ def create_chord_diagram(data, labels):
 
             if j == k:
                 shape = make_self_rel(
-                    l, 'rgb(175,175,175)', ideo_colors[k], radii_sribb[k]
+                    l, 'rgb(175,175,175)', colors[k], radii_sribb[k]
                 )
                 layout['shapes'].append(shape)
                 z = 0.9*np.exp(1j*(l[0]+l[1])/2)
                 text = '{:d} passes by {} to self'.format(int(data[k][k]), labels[k])
-                marker = Marker(size=0.5, color=ideo_colors[k])
+                marker = Marker(size=0.5, color=colors[k])
                 trace = Scatter(x=z.real,
                                 y=z.imag,
                                 mode='markers',
