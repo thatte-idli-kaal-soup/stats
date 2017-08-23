@@ -97,7 +97,7 @@ def score_line_figure():
     return figure
 
 
-def o_d_lines_figure():
+def player_o_d_stats():
     columns = ['Player {}'.format(i) for i in range(7)]
     players = set(list(DATA[columns].fillna('V').values.flatten()))
     players.remove('V')
@@ -114,6 +114,12 @@ def o_d_lines_figure():
         player_stats[player] = (
             len(points), len(o_points), len(points) - len(o_points)
         )
+
+    return player_stats
+
+
+def o_d_lines_figure():
+    player_stats = player_o_d_stats()
     scatter_data = {
         'x': [o for _, o, _ in player_stats.values()],
         'y': [d for _, _, d in player_stats.values()],
@@ -409,7 +415,14 @@ def passes_chord_diagram():
         )
         passes = passes.append(s).sort_index()
 
-    return create_chord_diagram(passes.fillna(0).values, passes.index)
+    player_stats = player_o_d_stats()
+    # Order by no. of offensive points played
+    order_by = sorted(player_stats,
+                      key=lambda x: player_stats[x][1],
+                      reverse=True)
+    data = passes.loc[order_by][order_by].fillna(0).values
+
+    return create_chord_diagram(data, order_by)
 
 graph_types = OrderedDict(
     [
