@@ -13,7 +13,7 @@ import pandas
 from chord_diagram import create_chord_diagram
 
 HERE = dirname(abspath(__file__))
-STATS_FILE = join(HERE, '..', 'data', 'stats.csv')
+STATS_FILE = join(HERE, 'data', 'stats.csv')
 TOURNAMENT = 'BUO 2017'
 TEAM = 'TIKS'
 markers = ['circle', 'square', 'cross', 'diamond']
